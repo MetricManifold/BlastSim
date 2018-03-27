@@ -18,6 +18,20 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="constants.h" />
+    <ClInclude Include="central.h" />
+    <ClInclude Include="equations.h" />
+    <ClInclude Include="viscous.h" />
+    <ClInclude Include="weno.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="central.cpp" />
+    <ClCompile Include="equations.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="viscous.cpp" />
+    <ClCompile Include="weno.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9C84B843-36B2-4904-AF0D-563443D015F1}</ProjectGuid>
     <RootNamespace>BlastSim</RootNamespace>
@@ -82,6 +96,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
+    <Link>
+      <StackReserveSize>5295000000</StackReserveSize>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -107,10 +124,9 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <StackReserveSize>5295000000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
