@@ -5,16 +5,16 @@
 
 namespace TAU
 {
-	extern double mu[D + M + D][D + N + D];
+	extern double mu[D + M + E][D + N + E];
 
-	void momx(size_t i, size_t j);
-	void momy(size_t i, size_t j);
-	void ene(size_t i, size_t j);
-
-	void xxpdx(size_t i, size_t j);
-	void xydx(size_t i, size_t j);
-	void yypdy(size_t i, size_t j);
-	void xydy(size_t i, size_t j);
+	double momx(size_t i, size_t j);
+	double momy(size_t i, size_t j);
+	double ene(size_t i, size_t j);
+	
+	double xxpdx(size_t i, size_t j);
+	double xydx(size_t i, size_t j);
+	double yypdy(size_t i, size_t j);
+	double xydy(size_t i, size_t j);
 	
 
 }

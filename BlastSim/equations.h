@@ -3,27 +3,27 @@
 #include "weno.h"
 #include "viscous.h"
 
-#define STENCIL_MUL(f, g) for (size_t n = 0; n < 5; f[n] *= g[n], n++);
-#define STENCIL_ADD(f, g) for (size_t n = 0; n < 5; f[n] += g[n], n++);
+#define STENCIL_MUL(f, g) for (size_t n = 0; n < 6; f[n] *= g[n], n++);
+#define STENCIL_ADD(f, g) for (size_t n = 0; n < 6; f[n] += g[n], n++);
 
-#define SLICE_TR(f) { f[i][j], f[i + 1][j], f[i + 2][j], f[i + 3][j], f[i + 4][j] }
-#define SLICE(f) { f[i][j], f[i][j + 1], f[i][j + 2], f[i][j + 3], f[i][j + 4] }
+#define SLICE_TR(f) { f[i][j + D], f[i + 1][j + D], f[i + 2][j + D], f[i + 3][j + D], f[i + 4][j + D], f[i + 5][j + D] }
+#define SLICE(f) { f[i + D][j], f[i + D][j + 1], f[i + D][j + 2], f[i + D][j + 3], f[i + D][j + 4], f[i + D][j + 5] }
 
 namespace EQN
 {
-	extern double rho[D + M + D][D + N + D];
+	extern double rho[D + M + E][D + N + E];
 	extern double drho[M][N];
 
-	extern double u[D + M + D][D + N + D];
+	extern double u[D + M + E][D + N + E];
 	extern double du[M][N];
 
-	extern double v[D + M + D][D + N + D];
+	extern double v[D + M + E][D + N + E];
 	extern double dv[M][N];
 
-	extern double e[D + M + D][D + N + D];
+	extern double e[D + M + E][D + N + E];
 	extern double de[M][N];
 	
-	extern double p[D + M + D][D + N + D];
+	extern double p[D + M + E][D + N + E];
 
 	double fnrho(size_t i, size_t j);
 	double fnrhou(size_t i, size_t j);

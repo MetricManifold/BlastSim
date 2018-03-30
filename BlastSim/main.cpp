@@ -3,28 +3,33 @@
 
 #include "weno.h"
 #include "equations.h"
+#include "curve.h"
 
 #define LOOP for (size_t i = 0; i < M; i++) for (size_t j = 0; j < N; j++)
-#define LOOPALL for (size_t i = 0; i < M + D + D; i++) for (size_t j = 0; j < N + D + D; j++)
+#define LOOPALL for (size_t i = 0; i < D + M + E; i++) for (size_t j = 0; j < D + N + E; j++)
+#define LOOPLEFT for (size_t i = 0; i < D; i++) for (size_t j = 0; j < D + N + E; j++)
+#define LOOPRIGHT for (size_t i = D + M; i < D + M + E; i++) for (size_t j = 0; j < D + N + E; j++)
+#define LOOPBOTTOM for (size_t i = 0; i < D + M + E; i++) for (size_t j = 0; j < D; j++)
+#define LOOPTOP for (size_t i = 0; i < D + M + E; i++) for (size_t j = D + N; j < D + N + E; j++)
 
 // compute k[E] for all values
-#define COMPUTE(E) \
+#define COMPUTE(B) \
 LOOP \
 { \
-double r = fnrho(i, j); \
-k[E][i][j] = {r, fnrhou(i, j) / r, fnrhov(i, j) / r, fnrhoe(i, j) / r }; \
+k[B][i][j] = {fnrho(i, j), fnrhou(i, j), fnrhov(i, j), fnrhoe(i, j) }; \
 }
 
-#define UPDATE(E, h) \
+#define UPDATE(B, h) \
 LOOP \
 { \
-rho[i + D][j + D] = drho[i][j] + h * k[E][i][j].rho; \
-u[i + D][j + D] = du[i][j] + h * k[E][i][j].u; \
-v[i + D][j + D] = dv[i][j] + h * k[E][i][j].v; \
-e[i + D][j + D] = de[i][j] + h * k[E][i][j].e; \
+rho[i + D][j + D] = drho[i][j] + h * k[B][i][j].rho; \
+u[i + D][j + D] = (du[i][j] * drho[i][j] + h * k[B][i][j].u) / rho[i + D][j + D]; \
+v[i + D][j + D] = (dv[i][j] * drho[i][j] + h * k[B][i][j].v) / rho[i + D][j + D]; \
+e[i + D][j + D] = (de[i][j] * drho[i][j] + h * k[B][i][j].e) / rho[i + D][j + D]; \
 }
 
 using namespace EQN;
+using namespace TAU;
 
 int main(int argc, char *argv[])
 {
@@ -34,11 +39,12 @@ int main(int argc, char *argv[])
 
 	LOOPALL
 	{
-		rho[i][j] = 1.225;
+		rho[i][j] = RHO0;
 		u[i][j] = 0;
 		v[i][j] = 0;
-		e[i][j] = 51.3;
-		p[i][j] = 1;
+		e[i][j] = E0;
+		p[i][j] = P0;
+		mu[i][j] = FIT::mu(e[i][j], rho[i][j]);
 	}
 
 	for (size_t time = 0; time < end; time++)
@@ -71,6 +77,33 @@ int main(int argc, char *argv[])
 			u[i + D][j + D] = du[i][j] + H * (k[0][i][j].u + 2 * k[1][i][j].u + 2 * k[2][i][j].u + k[3][i][j].u) / 6;
 			v[i + D][j + D] = dv[i][j] + H * (k[0][i][j].v + 2 * k[1][i][j].v + 2 * k[2][i][j].v + k[3][i][j].v) / 6;
 			e[i + D][j + D] = de[i][j] + H * (k[0][i][j].e + 2 * k[1][i][j].e + 2 * k[2][i][j].e + k[3][i][j].e) / 6;
+		}
+
+		// symmetry condition on x = 0
+		LOOPLEFT
+		{
+			rho[i][j] = rho[D + D - 1 - i][j];
+			u[i][j] = u[D + D - 1 - i][j];
+			v[i][j] = v[D + D - 1 - i][j];
+			e[i][j] = e[D + D - 1 - i][j];
+		}
+
+		// non reflecting
+		LOOPRIGHT
+		{
+
+		}
+
+		// non reflecting
+		LOOPTOP
+		{
+
+		}
+
+		// no-slip condition for viscous, or tangency for inviscid
+		LOOPBOTTOM
+		{
+
 		}
 	}
 

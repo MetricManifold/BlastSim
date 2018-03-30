@@ -1,19 +1,19 @@
 
 #include "equations.h"
 
-double EQN::rho[D + M + D][D + N + D];
+double EQN::rho[D + M + E][D + N + E];
 double EQN::drho[M][N];
 
-double EQN::u[D + M + D][D + N + D];
+double EQN::u[D + M + E][D + N + E];
 double EQN::du[M][N];
 
-double EQN::v[D + M + D][D + N + D];
+double EQN::v[D + M + E][D + N + E];
 double EQN::dv[M][N];
 
-double EQN::e[D + M + D][D + N + D];
+double EQN::e[D + M + E][D + N + E];
 double EQN::de[M][N];
 
-double EQN::p[D + M + D][D + N + D];
+double EQN::p[D + M + E][D + N + E];
 
 double EQN::fnrho(size_t i, size_t j)
 {

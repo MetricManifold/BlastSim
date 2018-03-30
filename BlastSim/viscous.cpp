@@ -1,12 +1,12 @@
 
 #include "viscous.h"
 
-double TAU::mu[D + M + D][D + N + D];
+double TAU::mu[D + M + E][D + N + E];
 
 namespace TAU
 {
-	void xxpdx(size_t i, size_t j)
+	double xxpdx(size_t i, size_t j)
 	{
-		4 / 3 * CS::gradx(mu, i, j);
+		return 4 / 3 * CS::gradx(mu, i, j);
 	}
 }
