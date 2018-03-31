@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cmath>
-
 #include "constants.h"
 
 #define EPS 1e-6

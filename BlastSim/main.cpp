@@ -4,6 +4,7 @@
 #include "weno.h"
 #include "equations.h"
 #include "curve.h"
+#include "test.h"
 
 #define LOOP for (size_t i = 0; i < M; i++) for (size_t j = 0; j < N; j++)
 #define LOOPALL for (size_t i = 0; i < D + M + E; i++) for (size_t j = 0; j < D + N + E; j++)
@@ -37,6 +38,9 @@ int main(int argc, char *argv[])
 
 	struct { double rho, u, v, e; } k[4][M][N];
 
+	testCurveT();
+
+	// initial conditions
 	LOOPALL
 	{
 		rho[i][j] = RHO0;
@@ -44,7 +48,7 @@ int main(int argc, char *argv[])
 		v[i][j] = 0;
 		e[i][j] = E0;
 		p[i][j] = P0;
-		mu[i][j] = FIT::mu(e[i][j], rho[i][j]);
+		mu[i][j] = MU0;
 	}
 
 	for (size_t time = 0; time < end; time++)
@@ -104,6 +108,11 @@ int main(int argc, char *argv[])
 		LOOPBOTTOM
 		{
 
+		}
+
+		LOOPALL
+		{
+			mu[i][j] = FIT::mu(e[i][j], rho[i][j]);
 		}
 	}
 
