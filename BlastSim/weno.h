@@ -2,8 +2,8 @@
 
 #include "constants.h"
 
-#define EPS 1e-6
 #define POW2(x) ((x) * (x))
+#define EPS 1e-6
 
 namespace WENO
 {

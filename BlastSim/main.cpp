@@ -1,44 +1,30 @@
 
 #include <iostream>
 
-#include "weno.h"
-#include "equations.h"
-#include "curve.h"
+#include "rungekutta.h"
+#include "boundary.h"
 #include "test.h"
+#include "initial.h"
 
-#define LOOP for (size_t i = 0; i < M; i++) for (size_t j = 0; j < N; j++)
-#define LOOPALL for (size_t i = 0; i < D + M + E; i++) for (size_t j = 0; j < D + N + E; j++)
-#define LOOPLEFT for (size_t i = 0; i < D; i++) for (size_t j = 0; j < D + N + E; j++)
-#define LOOPRIGHT for (size_t i = D + M; i < D + M + E; i++) for (size_t j = 0; j < D + N + E; j++)
-#define LOOPBOTTOM for (size_t i = 0; i < D + M + E; i++) for (size_t j = 0; j < D; j++)
-#define LOOPTOP for (size_t i = 0; i < D + M + E; i++) for (size_t j = D + N; j < D + N + E; j++)
-
-// compute k[E] for all values
-#define COMPUTE(B) \
-LOOP \
-{ \
-k[B][i][j] = {fnrho(i, j), fnrhou(i, j), fnrhov(i, j), fnrhoe(i, j) }; \
-}
-
-#define UPDATE(B, h) \
-LOOP \
-{ \
-rho[i + D][j + D] = drho[i][j] + h * k[B][i][j].rho; \
-u[i + D][j + D] = (du[i][j] * drho[i][j] + h * k[B][i][j].u) / rho[i + D][j + D]; \
-v[i + D][j + D] = (dv[i][j] * drho[i][j] + h * k[B][i][j].v) / rho[i + D][j + D]; \
-e[i + D][j + D] = (de[i][j] * drho[i][j] + h * k[B][i][j].e) / rho[i + D][j + D]; \
-}
-
+using namespace VISCOUS;
 using namespace EQN;
-using namespace TAU;
 
 int main(int argc, char *argv[])
 {
 	const size_t end = atoi(argv[1]);
 
-	struct { double rho, u, v, e; } k[4][M][N];
+	if (strcmp(argv[2], "INVISCID") == 0) type = INVISCID;
+	else if (strcmp(argv[2], "LAMINAR") == 0) type = LAMINAR;
+	else if (strcmp(argv[2], "TURBULENT") == 0) type = TURBULENT;
+	else exit(1);
 
-	testCurveT();
+	FILE *f;
+	f = fopen("output.txt", "w");
+
+	fprintf(f, "# dimensions are %zd,%zd\n", M, N);
+	fprintf(f, "# Finite differences; k=%f, h=%f\n", K, H);
+	fprintf(f, "# computing %zd time steps\n", end);
+	fprintf(f, "# using %s flow\n", argv[2]);
 
 	// initial conditions
 	LOOPALL
@@ -51,70 +37,59 @@ int main(int argc, char *argv[])
 		mu[i][j] = MU0;
 	}
 
+	INIT::tube();
+
 	for (size_t time = 0; time < end; time++)
 	{
+		BND::noslipYN(rho);
+		BND::noslipYN(p);
+		BND::noslipYN(u);
+		BND::noslipYN(v);
 
-		// save the current state of the system
-		LOOP
+		BND::noslipXM(rho);
+		BND::noslipXM(p);
+		BND::noslipXM(u);
+		BND::noslipXM(v);
+
+		BND::noslipX0(rho);
+		BND::noslipX0(p);
+		BND::noslipX0(u);
+		BND::noslipX0(v);
+
+		BND::symmetryY0(rho);
+		BND::symmetryY0(p);
+		BND::symmetryY0(u);
+		BND::symmetryY0(v);
+		BND::symmetryY0(e);
+
+		RK::rungekutta4();
+
+		LOOPIN p[i][j] = FIT::p(e[i][j], rho[i][j]);
+		if (type = INVISCID) LOOPALL mu[i][j] = 0;
+		else LOOPALL mu[i][j] = FIT::mu(e[i][j], rho[i][j]);
+
+		/*
+		if (type == INVISCID)
 		{
-			drho[i][j] = rho[i + D][j + D];
-			du[i][j] = u[i + D][j + D];
-			dv[i][j] = v[i + D][j + D];
-			de[i][j] = e[i + D][j + D];
+			BND::tangencyY0(rho);
+			BND::tangencyY0(u);
+			BND::tangencyY0(v);
 		}
-
-		COMPUTE(0);
-		UPDATE(0, H / 2);
-
-		COMPUTE(1);
-		UPDATE(1, H / 2);
-
-		COMPUTE(2);
-		UPDATE(2, H);
-
-		COMPUTE(3);
-		
-		// update the state of the system
-		LOOP
+		else
 		{
-			rho[i + D][j + D] = drho[i][j] + H * (k[0][i][j].rho + 2 * k[1][i][j].rho + 2 * k[2][i][j].rho + k[3][i][j].rho) / 6;
-			u[i + D][j + D] = du[i][j] + H * (k[0][i][j].u + 2 * k[1][i][j].u + 2 * k[2][i][j].u + k[3][i][j].u) / 6;
-			v[i + D][j + D] = dv[i][j] + H * (k[0][i][j].v + 2 * k[1][i][j].v + 2 * k[2][i][j].v + k[3][i][j].v) / 6;
-			e[i + D][j + D] = de[i][j] + H * (k[0][i][j].e + 2 * k[1][i][j].e + 2 * k[2][i][j].e + k[3][i][j].e) / 6;
-		}
+			BND::noslipY0(rho);
+			BND::noslipY0(u);
+			BND::noslipY0(v);
 
-		// symmetry condition on x = 0
-		LOOPLEFT
-		{
-			rho[i][j] = rho[D + D - 1 - i][j];
-			u[i][j] = u[D + D - 1 - i][j];
-			v[i][j] = v[D + D - 1 - i][j];
-			e[i][j] = e[D + D - 1 - i][j];
-		}
+			BND::noslipYN(rho);
+			BND::noslipYN(u);
+			BND::noslipYN(v);
+		}*/
 
-		// non reflecting
-		LOOPRIGHT
-		{
 
-		}
-
-		// non reflecting
-		LOOPTOP
-		{
-
-		}
-
-		// no-slip condition for viscous, or tangency for inviscid
-		LOOPBOTTOM
-		{
-
-		}
-
-		LOOPALL
-		{
-			mu[i][j] = FIT::mu(e[i][j], rho[i][j]);
-		}
 	}
+	
+	LOOPIN fprintf(f, "%f %f\n", x, rho[i][j] / 1.174);
 
 	return 0;
 }

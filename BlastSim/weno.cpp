@@ -63,6 +63,6 @@ double WENO::weno(double f[6])
 		a[1] / sum,
 		a[2] / sum };
 
-	return (WENO::flux(f + 1, w) - WENO::flux(f, w)) / H;
+	return (WENO::flux(f, w) - WENO::flux(f - 1, w)) / H;
 }
 

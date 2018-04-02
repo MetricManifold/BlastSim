@@ -2,19 +2,25 @@
 
 #include "equations.h"
 #include "central.h"
+#include "curve.h"
 
-namespace TAU
+#define LOOPLOCAL for (size_t I = i - 1; I < i + 2; I++) for (size_t J = j - 1; J < j + 2; J++)
+
+
+namespace VISCOUS
 {
 	extern double mu[D + M + E][D + N + E];
 
-	double momx(size_t i, size_t j);
-	double momy(size_t i, size_t j);
-	double ene(size_t i, size_t j);
+	double fnrhou(size_t i, size_t j);
+	double fnrhov(size_t i, size_t j);
+	double fnrhoe(size_t i, size_t j);
 	
-	double xxpdx(size_t i, size_t j);
-	double xydx(size_t i, size_t j);
-	double yypdy(size_t i, size_t j);
-	double xydy(size_t i, size_t j);
+	double xxp(size_t i, size_t j);
+	double yyp(size_t i, size_t j);
+	double xy(size_t i, size_t j);
+	double tt(size_t i, size_t j);
+	double qx(size_t i, size_t j);
+	double qy(size_t i, size_t j);
 	
 
 }

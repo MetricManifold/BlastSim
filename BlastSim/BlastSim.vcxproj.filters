@@ -36,6 +36,15 @@
     <ClInclude Include="test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="boundary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rungekutta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="initial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -57,6 +66,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="boundary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rungekutta.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="initial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

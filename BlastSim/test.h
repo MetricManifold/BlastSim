@@ -6,6 +6,11 @@
 #include "equations.h"
 #include "curve.h"
 
-void testCurveMu();
-void testCurveP();
-void testCurveT();
+namespace TEST
+{
+	void test();
+	void testCurveMu();
+	void testCurveP();
+	void testCurveT();
+	void testCurveK();
+}

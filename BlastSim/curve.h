@@ -16,4 +16,7 @@ namespace FIT
 
 	// temperature
 	double T(double p, double rho);
+
+	// coefficient of thermal conductivity
+	double k(double e, double rho);
 }
