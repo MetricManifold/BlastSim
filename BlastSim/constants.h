@@ -7,7 +7,7 @@
  */
 #define X0 0
 #define Y0 0
-#define XM 3.52
+#define XM 1
 #define YN 0.02
 #define HOB ((XM - X0) / 2)
 #define R0 0.3
@@ -35,10 +35,14 @@
 #define MU0 1.7894e-5	// kg m^-1 s^-1
 #define RHO0 1.225		// kg m^-3
 #define E0 78408.4		// m^2 s^-2
-#define P0 101325		// N m^-2
+#define P0 1			// atm
 #define T0 288.15		// K
 #define K0 1.87915e-2	// J (K M S)^1 (thermal conductivity)
-#define RHOWALL 10e5
+
+/*
+ * conversions
+ */
+#define ATM 101325		// N m^-2, Pa
 
  // value of y
 #define y (j * H + Y0 + H)

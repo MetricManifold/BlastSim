@@ -42,7 +42,7 @@
     <ClInclude Include="rungekutta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="initial.h">
+    <ClInclude Include="cases.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,7 +74,7 @@
     <ClCompile Include="rungekutta.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="initial.cpp">
+    <ClCompile Include="cases.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

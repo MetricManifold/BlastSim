@@ -111,13 +111,13 @@ namespace FIT
 		double Y = log10(rho / RHO0), Z = log10(e / E0);
 		double F, a1, a2, a3, a4, a5, a6, a7, a8, a9;
 
-		if (Y < -4.5)
+		if (Z < 0.65)
 		{
-			if (Z < 0.65)
-			{
-				return rho * e * 0.3965;
-			}
-			else if (Z < 1.50)
+			return rho * e * 0.3965 / ATM;
+		}
+		else if (Y < -4.5)
+		{
+			if (Z < 1.50)
 			{
 				a1 = 1.52792 - 1.26953e-2 * Y;
 				a2 = (-6.13514e-1 - 5.08262e-2 * Y) * Z;
@@ -180,11 +180,7 @@ namespace FIT
 		}
 		else if (Y < -0.5)
 		{
-			if (Z < 0.65)
-			{
-				return rho * e * 0.398;
-			}
-			else if (Z < 1.50)
+			if (Z < 1.50)
 			{
 				a1 = 1.39123 - 4.08321e-3 * Y;
 				a2 = (1.42545e-2 + 1.41769e-2 * Y) * Z;
@@ -239,11 +235,7 @@ namespace FIT
 		}
 		else
 		{
-			if (Z < 0.65)
-			{
-				return rho * e * 0.3988;
-			}
-			else if (Z < 1.70)
+			if (Z < 1.70)
 			{
 				a1 = 1.37062 + 1.29673e-2 * Y;
 				a2 = (1.11418e-1 - 3.26912e-2 * Y) * Z;
@@ -279,7 +271,7 @@ namespace FIT
 			}
 		}
 
-		return rho * e * (F - 1);
+		return rho * e * (F - 1) / ATM;
 	}
 
 	double T(double p, double rho)

@@ -17,12 +17,12 @@ double EQN::p[D + M + E][D + N + E];
 
 double EQN::fnrho(size_t i, size_t j)
 {
-	double rhou[] = SLICE_TR(rho);
-	double us[] = SLICE_TR(u);
+	double rhou[] = SLICEX(rho);
+	double us[] = SLICEX(u);
 	STENCIL_MUL(rhou, us);
 
-	double rhov[] = SLICE(rho);
-	double vs[] = SLICE(u);
+	double rhov[] = SLICEY(rho);
+	double vs[] = SLICEY(u);
 	STENCIL_MUL(rhov, vs);
 
 	return -((WENO::weno(rhou) + WENO::weno(rhov)) + A / y * rhov[D]);
@@ -30,19 +30,19 @@ double EQN::fnrho(size_t i, size_t j)
 
 double EQN::fnrhou(size_t i, size_t j)
 {
-	double rhoup[] = SLICE_TR(rho);
+	double rhoup[] = SLICEX(rho);
 	{
-		double ps[] = SLICE_TR(p);
-		double usx[] = SLICE_TR(u);
-		STENCIL_MUL(usx, usx);
-		STENCIL_MUL(rhoup, usx);
+		double ps[] = SLICEX(p);
+		double us[] = SLICEX(u);
+		STENCIL_MUL(us, us);
+		STENCIL_MUL(rhoup, us);
 		STENCIL_ADD(rhoup, ps);
 	}
 
-	double rhovu[] = SLICE(rho);
+	double rhovu[] = SLICEY(rho);
 	{
-		double vs[] = SLICE(v);
-		double us[] = SLICE(u);
+		double vs[] = SLICEY(v);
+		double us[] = SLICEY(u);
 		STENCIL_MUL(rhovu, vs);
 		STENCIL_MUL(rhovu, us);
 	}
@@ -53,18 +53,18 @@ double EQN::fnrhou(size_t i, size_t j)
 
 double EQN::fnrhov(size_t i, size_t j)
 {
-	double rhouv[] = SLICE_TR(rho);
+	double rhouv[] = SLICEX(rho);
 	{
-		double us[] = SLICE_TR(u);
-		double vs[] = SLICE_TR(v);
+		double us[] = SLICEX(u);
+		double vs[] = SLICEX(v);
 		STENCIL_MUL(rhouv, us);
 		STENCIL_MUL(rhouv, vs);
 	}
 
-	double rhovp[] = SLICE(rho);
+	double rhovp[] = SLICEY(rho);
 	{
-		double ps[] = SLICE(p);
-		double vs[] = SLICE(v);
+		double ps[] = SLICEY(p);
+		double vs[] = SLICEY(v);
 		STENCIL_MUL(vs, vs);
 		STENCIL_MUL(rhovp, vs);
 		STENCIL_ADD(rhovp, ps);
@@ -76,21 +76,21 @@ double EQN::fnrhov(size_t i, size_t j)
 
 double EQN::fnrhoe(size_t i, size_t j)
 {
-	double rhopu[] = SLICE_TR(rho);
+	double rhopu[] = SLICEX(rho);
 	{
-		double es[] = SLICE_TR(e);
-		double ps[] = SLICE_TR(p);
-		double us[] = SLICE_TR(u);
+		double es[] = SLICEX(e);
+		double ps[] = SLICEX(p);
+		double us[] = SLICEX(u);
 		STENCIL_MUL(rhopu, es);
 		STENCIL_ADD(rhopu, ps);
 		STENCIL_MUL(rhopu, us);
 	}
 
-	double rhopv[] = SLICE(rho);
+	double rhopv[] = SLICEY(rho);
 	{
-		double es[] = SLICE(e);
-		double ps[] = SLICE(p);
-		double vs[] = SLICE(v);
+		double es[] = SLICEY(e);
+		double ps[] = SLICEY(p);
+		double vs[] = SLICEY(v);
 		STENCIL_MUL(rhopu, es);
 		STENCIL_ADD(rhopu, ps);
 		STENCIL_MUL(rhopu, vs);

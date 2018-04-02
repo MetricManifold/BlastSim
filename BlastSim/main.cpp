@@ -4,7 +4,7 @@
 #include "rungekutta.h"
 #include "boundary.h"
 #include "test.h"
-#include "initial.h"
+#include "cases.h"
 
 using namespace VISCOUS;
 using namespace EQN;
@@ -37,36 +37,17 @@ int main(int argc, char *argv[])
 		mu[i][j] = MU0;
 	}
 
-	INIT::tube();
+	TUBE::initial();
 
 	for (size_t time = 0; time < end; time++)
 	{
-		BND::noslipYN(rho);
-		BND::noslipYN(p);
-		BND::noslipYN(u);
-		BND::noslipYN(v);
-
-		BND::noslipXM(rho);
-		BND::noslipXM(p);
-		BND::noslipXM(u);
-		BND::noslipXM(v);
-
-		BND::noslipX0(rho);
-		BND::noslipX0(p);
-		BND::noslipX0(u);
-		BND::noslipX0(v);
-
-		BND::symmetryY0(rho);
-		BND::symmetryY0(p);
-		BND::symmetryY0(u);
-		BND::symmetryY0(v);
-		BND::symmetryY0(e);
-
 		RK::rungekutta4();
 
 		LOOPIN p[i][j] = FIT::p(e[i][j], rho[i][j]);
+
+
 		if (type = INVISCID) LOOPALL mu[i][j] = 0;
-		else LOOPALL mu[i][j] = FIT::mu(e[i][j], rho[i][j]);
+		else LOOPIN mu[i][j] = FIT::mu(e[i][j], rho[i][j]);
 
 		/*
 		if (type == INVISCID)

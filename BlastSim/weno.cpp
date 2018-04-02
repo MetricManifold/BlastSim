@@ -24,37 +24,22 @@ double WENO::beta2(double *f)
 	return l * l / 4 + r * r;
 }
 
-double WENO::flux(double *f, double w[3])
-{
-	double R[] = {
-		(2 * F(-2) - 7 * F(-1) + 11 * F(0)) / 6,
-		(-F(-1) + 5 * F(0) + 2 * F(1)) / 6,
-		(2 * F(0) + 5 * F(1) - F(2)) / 6 };
-
-	double flux = 0;
-	for (size_t l = 0; l < 2; l++)
-	{
-		flux += w[l] * R[l];
-	}
-
-	return flux;
-}
-
-double WENO::weno(double f[6])
+double WENO::flux(double *f)
 {
 	double beta[] = {
-		WENO::beta0(f + 1),
-		WENO::beta1(f + 1),
-		WENO::beta2(f + 1) };
+		WENO::beta0(f),
+		WENO::beta1(f),
+		WENO::beta2(f) };
 
 	double l = abs(0.5 * F(-2) - 2 * F(-1) + 1.5 * F(0)) - abs(-1.5 * F(0) + 2 * F(1) - 0.5 * F(2));
 	double r = F(-2) - F(-1) - 3 * F(0) + 5 * F(1) - 2 * F(2);
-	double tau = l * l + r * r;
+	//double tau = l * l + r * r;
+	double tau = abs(beta[0] - beta[2]);
 
 	double a[] = {
 		0.1 * (1 + POW2(tau / (EPS + beta[0]))),
-		0.6 * (1 + POW2(tau / (EPS + beta[0]))),
-		0.3 * (1 + POW2(tau / (EPS + beta[0]))) };
+		0.6 * (1 + POW2(tau / (EPS + beta[1]))),
+		0.3 * (1 + POW2(tau / (EPS + beta[2]))) };
 
 	double sum = a[0] + a[1] + a[2];
 
@@ -63,6 +48,22 @@ double WENO::weno(double f[6])
 		a[1] / sum,
 		a[2] / sum };
 
-	return (WENO::flux(f, w) - WENO::flux(f - 1, w)) / H;
+	double R[] = {
+		(2 * F(-2) - 7 * F(-1) + 11 * F(0)) / 6,
+		(-F(-1) + 5 * F(0) + 2 * F(1)) / 6,
+		(2 * F(0) + 5 * F(1) - F(2)) / 6 };
+
+	double flux = 0;
+	for (size_t n = 0; n < 3; n++)
+	{
+		flux += w[n] * R[n];
+	}
+
+	return flux;
+}
+
+double WENO::weno(double f[6])
+{
+	return (WENO::flux(f) - WENO::flux(f - 1)) / H;
 }
 
