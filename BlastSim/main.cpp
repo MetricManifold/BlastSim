@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
 	else if (strcmp(argv[2], "TURBULENT") == 0) type = TURBULENT;
 	else exit(1);
 
+	TEST::test();
+
 	FILE *f;
 	f = fopen("output.txt", "w");
 

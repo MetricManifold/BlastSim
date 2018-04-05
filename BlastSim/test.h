@@ -13,4 +13,5 @@ namespace TEST
 	void testCurveP();
 	void testCurveT();
 	void testCurveK();
+	void testCurveA();
 }

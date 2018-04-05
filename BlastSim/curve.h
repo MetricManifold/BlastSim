@@ -10,6 +10,7 @@
 #define P_CURVE 101325		// N m^-2, Pa
 #define RHO_CURVE 1.243		// kg m^-3
 #define T_CURVE 273.15		// K
+#define A_CURVE 331.23		// m s^-1
 
 /*
  * conversions
