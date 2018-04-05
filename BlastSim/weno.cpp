@@ -62,7 +62,7 @@ double WENO::flux(double *f)
 	return flux;
 }
 
-double WENO::weno(double f[6])
+double WENO::grad(double f[6])
 {
 	return (WENO::flux(f) - WENO::flux(f - 1)) / H;
 }

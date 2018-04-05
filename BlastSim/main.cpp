@@ -29,12 +29,12 @@ int main(int argc, char *argv[])
 	// initial conditions
 	LOOPALL
 	{
-		rho[i][j] = RHO0;
+		rho[i][j] = 1;
 		u[i][j] = 0;
 		v[i][j] = 0;
-		e[i][j] = E0;
-		p[i][j] = P0;
-		mu[i][j] = MU0;
+		e[i][j] = 1;
+		p[i][j] = 1;
+		mu[i][j] = 1;
 	}
 
 	TUBE::initial();
@@ -42,12 +42,6 @@ int main(int argc, char *argv[])
 	for (size_t time = 0; time < end; time++)
 	{
 		RK::rungekutta4();
-
-		LOOPIN p[i][j] = FIT::p(e[i][j], rho[i][j]);
-
-
-		if (type = INVISCID) LOOPALL mu[i][j] = 0;
-		else LOOPIN mu[i][j] = FIT::mu(e[i][j], rho[i][j]);
 
 		/*
 		if (type == INVISCID)

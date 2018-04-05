@@ -14,6 +14,11 @@
 	LOOP v[i + D][j + D] = (dv[i][j] * drho[i][j] + dt * k[IND][i][j].rhov) / rho[i + D][j + D]; \
 	LOOP e[i + D][j + D] = (de[i][j] * drho[i][j] + dt * k[IND][i][j].rhoe) / rho[i + D][j + D];
 
+#define FITS \
+	if (type = INVISCID) LOOPALL VISCOUS::mu[i][j] = 0; \
+	else LOOPIN VISCOUS::mu[i][j] = FIT::mu(e[i][j], rho[i][j]); \
+	LOOPIN p[i][j] = FIT::p(e[i][j], rho[i][j]);
+
 struct Data { double rho, rhou, rhov, rhoe; };
 
 namespace RK

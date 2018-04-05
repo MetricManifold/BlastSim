@@ -12,5 +12,5 @@ namespace WENO
 	double beta2(double *f);
 
 	double flux(double *f);
-	double weno(double f[6]);
+	double grad(double f[6]);
 }

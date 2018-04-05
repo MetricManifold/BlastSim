@@ -6,88 +6,57 @@ using namespace EQN;
 namespace BND
 {
 
-	void symmetryY0(double f[D + M + E][D + N + E])
+	void symmetryY0()
 	{
-		LOOPBOTTOM f[i][j] = f[i][D + D - 1 - j];
+		LOOPBOTTOM u[i][j] = u[i][D + D - 1 - j];
+		LOOPBOTTOM v[i][j] = v[i][D + D - 1 - j];
+		LOOPBOTTOM p[i][j] = p[i][D + D - 1 - j];
+		LOOPBOTTOM e[i][j] = e[i][D + D - 1 - j];
+		LOOPBOTTOM rho[i][j] = rho[i][D + D - 1 - j];
 	}
 
-	void noslipXM(double f[D + M + E][D + N + E])
+	void noslipXM()
 	{
-		if (f == v || f == u)
-		{
-			LOOPRIGHT f[i][j] = 0;
-			LOOPRIGHT f[i][j] = 0;
-		}
-		else if (f == p)
-		{
-			LOOPRIGHT f[i][j] = (v[i][j] - 2 * v[i - 1][j] + v[i - 2][j]) / (H * Re) + f[i - 1][j];
-		}
-		else if (f == rho)
-		{
-			LOOPRIGHT f[i][j] = f[D + M - 1][j];
-		}
+		LOOPRIGHT u[i][j] = 0;
+		LOOPRIGHT v[i][j] = 0;
+		LOOPRIGHT p[i][j] = -(v[i][j] - 2 * v[i - 1][j] + v[i - 2][j]) / (H * Re) + p[i - 1][j];
+		LOOPRIGHT rho[i][j] = RHOW;
+		//LOOPRIGHT e[i][j] = 1;
 	}
 
-	void noslipYN(double f[D + M + E][D + N + E])
+	void noslipYN()
 	{
-		if (f == v || f == u)
-		{
-			LOOPTOP f[i][j] = 0;
-			LOOPTOP f[i][j] = 0;
-		}
-		else if (f == p)
-		{
-			LOOPTOP f[i][j] = (v[i][j] - 2 * v[i][j - 1] + v[i][j - 2]) / (H * Re) + f[i][j - 1];
-		}
-		else if (f == rho)
-		{
-			LOOPTOP f[i][j] = f[i][D + N - 1];
-		}
+		LOOPTOP u[i][j] = 0;
+		LOOPTOP v[i][j] = 0;
+		LOOPTOP p[i][j] = -(u[i][j] - 2 * u[i][j - 1] + u[i][j - 2]) / (H * Re) + p[i][j - 1];
+		LOOPTOP rho[i][j] = RHOW;
+		//LOOPTOP e[i][j] = 1;
 	}
 
-	void noslipX0(double f[D + M + E][D + N + E])
+	void noslipX0()
 	{
-		if (f == v || f == u)
-		{
-			LOOPLEFT f[i][j] = 0;
-			LOOPLEFT f[i][j] = 0;
-		}
-		else if (f == p)
-		{
-			LOOPLEFT f[i][j] = (v[i + 2][j] - 2 * v[i + 1][j] + v[i][j]) / (H * Re) + f[i + 1][j];
-		}
-		else if (f == rho)
-		{
-			LOOPLEFT f[i][j] = f[D][j];
-		}
+		LOOPLEFT v[i][j] = 0;
+		LOOPLEFT u[i][j] = 0;
+		LOOPLEFT p[i][j] = -(v[i + 2][j] - 2 * v[i + 1][j] + v[i][j]) / (H * Re) + p[i + 1][j];
+		LOOPLEFT rho[i][j] = RHOW;
+		//LOOPLEFT e[i][j] = 1;
 	}
 
-	void tangencyX0(double f[D + M + E][D + N + E])
+	void tangencyX0()
 	{
-		if (f == v)
-		{
-			LOOPLEFT f[i][j] = f[D][j];
-		}
-		else if (f == u)
-		{
-			LOOPLEFT f[i][j] = 0;
-		}
-		else if (f == p)
-		{
-			LOOPLEFT f[i][j] = (v[i + 2][j] - 2 * v[i + 1][j] + v[i][j]) / (H * Re) + f[i + 1][j];
-		}
-		else if (f == rho)
-		{
-			LOOPRIGHT f[i][j] = f[D][j];
-		}
+		LOOPLEFT u[i][j] = u[D][j];
+		LOOPLEFT v[i][j] = 0;
+		LOOPLEFT p[i][j] = -(v[i + 2][j] - 2 * v[i + 1][j] + v[i][j]) / (H * Re) + p[i + 1][j];
+		LOOPLEFT rho[i][j] = RHOW;
+		//LOOPLEFT e[i][j] = e[D][j];
 	}
 
-	void farfieldXM(double f[D + M + E][D + N + E])
+	void farfieldXM()
 	{
 		LOOPRIGHT return;
 	}
 
-	void farfieldYN(double f[D + M + E][D + N + E])
+	void farfieldYN()
 	{
 		LOOPTOP return;
 	}

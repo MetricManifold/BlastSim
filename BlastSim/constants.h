@@ -32,17 +32,21 @@
 /*
  * initial values
  */
-#define MU0 1.7894e-5	// kg m^-1 s^-1
+/*
 #define RHO0 1.225		// kg m^-3
-#define E0 78408.4		// m^2 s^-2
+#define E0 205618.4		// m^2 s^-2
 #define P0 1			// atm
 #define T0 288.15		// K
-#define K0 1.87915e-2	// J (K M S)^1 (thermal conductivity)
+*/
 
-/*
- * conversions
- */
-#define ATM 101325		// N m^-2, Pa
+// for the tube problem
+#define RHO0 1.174		// kg m^-3
+#define P0 1			// atm
+#define T0 300			// K
+#define E0 51.33		// kcal/kg
+
+#define K0 1.87915e-2	// J (K M S)^1 (thermal conductivity)
+#define MU0 1.7894e-5	// kg m^-1 s^-1
 
  // value of y
 #define y (j * H + Y0 + H)
@@ -64,8 +68,8 @@ static enum { INVISCID, LAMINAR, TURBULENT } type;
 #define LOOP for (size_t i = 0; i < M; i++) for (size_t j = 0; j < N; j++)
 #define LOOPIN for (size_t i = D; i < M + D; i++) for (size_t j = D; j < N + D; j++)
 #define LOOPALL for (size_t i = 0; i < D + M + E; i++) for (size_t j = 0; j < D + N + E; j++)
-#define LOOPLEFT for (size_t i = D - 1; i + 1 > 0; i--) for (size_t j = D; j < D + N; j++)
-#define LOOPRIGHT for (size_t i = D + M; i < D + M + E; i++) for (size_t j = D; j < D + N; j++)
-#define LOOPBOTTOM for (size_t i = D; i < D + M; i++) for (size_t j = D - 1; j + 1 > 0; j--)
-#define LOOPTOP for (size_t i = D; i < D + M; i++) for (size_t j = D + N; j < D + N + E; j++)
+#define LOOPLEFT for (size_t i = D - 1; i + 1 > 0; i--) for (size_t j = 0; j < D + N + E; j++)
+#define LOOPRIGHT for (size_t i = D + M; i < D + M + E; i++) for (size_t j = 0; j < D + N + E; j++)
+#define LOOPBOTTOM for (size_t i = 0; i < D + M + E; i++) for (size_t j = D - 1; j + 1 > 0; j--)
+#define LOOPTOP for (size_t i = 0; i < D + M + E; i++) for (size_t j = D + N; j < D + N + E; j++)
 
