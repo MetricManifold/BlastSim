@@ -130,7 +130,7 @@ namespace TEST
 			for (double loge = e0; loge < en; loge += de)
 			{
 				double p = FIT::p(pow(10, loge), rho / RHO_CURVE);
-				fprintf(f, "%f %f\n", log10(p), log10(FIT::a(pow(10, loge), rho / RHO_CURVE)));
+				fprintf(f, "%f %f\n", log10(p), log10(FIT::a(pow(10, loge), rho / RHO_CURVE) / A_CURVE));
 			}
 			fprintf(f, "\n\n");
 		}

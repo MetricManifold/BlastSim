@@ -15,6 +15,8 @@
 	LOOP e[i + D][j + D] = (de[i][j] * drho[i][j] + dt * k[IND][i][j].rhoe) / rho[i + D][j + D];
 
 #define FITS \
+	LOOPIN u[i][j] /= FIT::a(e[i][j], rho[i][j]); \
+	LOOPIN v[i][j] /= FIT::a(e[i][j], rho[i][j]); \
 	if (type = INVISCID) LOOPALL VISCOUS::mu[i][j] = 0; \
 	else LOOPIN VISCOUS::mu[i][j] = FIT::mu(e[i][j], rho[i][j]); \
 	LOOPIN p[i][j] = FIT::p(e[i][j], rho[i][j]);

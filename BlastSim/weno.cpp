@@ -1,7 +1,7 @@
 
 #include "weno.h"
 
-#define F(i) f[i + D]
+#define F(i) *(f + D)
 
 double WENO::beta0(double *f)
 {
