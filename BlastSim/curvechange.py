@@ -30,10 +30,15 @@ cregex = re.compile(regex)
 start = 0
 for a in re.findall(regex, content):
 	a = [0, *a]
+	a = [a[0], a[1], a[2], a[3], a[4], a[5], a[8], a[6], a[9], a[7], a[10], a[11], a[12], a[13], a[14], a[15], a[18], a[16], a[19], a[17], a[20], a[21], a[22], a[23], a[24]]
+
 
 	for i in range(1, len(a)):
-		if a[i] and a[i][0] not in ['-', '+']:
+		if not a[i]:
+			a[i] = '0'
+		if a[i][0] not in ['-', '+']:
 			a[i] = '+' + a[i]
+
 
 
 	"""
@@ -78,7 +83,7 @@ for a in re.findall(regex, content):
 	"""
 
 	f.write("""
-		a1 = %s + (%s * 2 %s * Z) * Z;
+		a1 = %s + (%s * 2 %s * 3 * Z) * Z;
 		a2 = (%s %s * Z %s * Y) * Y;
 		a3 = %s + (%s * 2 %s * 2 * Y %s * 3 * Z) * Z + (%s * 2 %s * Y) * Y;
 		a4 = exp(%s %s * Y %s * Z %s * Y * Z);
