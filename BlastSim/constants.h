@@ -16,8 +16,8 @@
  * finite difference method constants
  */
 #define C 0.6			// courant number
+#define H (0.02)		// spatial increment
 #define K (H * C)		// time increment
-#define H (0.02)	// spatial increment
 #define D 3				// left boundary thickness
 #define E 2				// right boundary thickness
 #define M size_t((XM - X0) / H)
