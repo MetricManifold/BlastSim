@@ -82,19 +82,19 @@ double WENO::grad(double f[6], double df[6], double u[6])
 	// if the flux is from left to right
 	if (df[D] > 0)
 	{
-		right = WENO::flux(g - 1, false);
-		left = WENO::flux(f - 1, true);
+		right = WENO::flux(f, false);
+		left = WENO::flux(g-1, true);
 	}
 	// flux if from right to left
 	else
 	{
-		right = WENO::flux(f, true);
-		left = WENO::flux(g, false);
+		right = WENO::flux(g, true);
+		left = WENO::flux(f-1, false);
 	}
 	
 	//right = (WENO::flux(f, false) + WENO::flux(g, false) - a * (WENO::flux(v, false) - WENO::flux(u, false))) / 2;
 	//left = (WENO::flux(f - 1, true) + WENO::flux(g - 1, true) - a * (WENO::flux(v - 1, true) - WENO::flux(u - 1, true))) / 2;
 	
-	return (right - left) * H;
+	return -(right - left) / H;
 }
 

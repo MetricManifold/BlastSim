@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 	}
 	
 	LOOPIN fprintf(f, "%f %f\n", x, rho[i][j]);
-	fprintf(f, "\n");
+	fprintf(f, "\n\n");
 	LOOPIN fprintf(f, "%f %f\n", x, p[i][j]);
 
 	return 0;
