@@ -19,7 +19,7 @@
 #define H (0.02)		// spatial increment
 #define K (H * C)		// time increment
 #define D 3				// left boundary thickness
-#define E 2				// right boundary thickness
+#define E 3				// right boundary thickness
 #define M size_t((XM - X0) / H)
 #define N size_t((YN - Y0) / H)
 
@@ -61,6 +61,8 @@ static enum { INVISCID, LAMINAR, TURBULENT } type;
 // 1 for 2d axisymmetric flow
 // 0 for 2d planar flow
 #define A 0
+
+#define PI atan(1) * 4
 
 /*
  * loop algorithms

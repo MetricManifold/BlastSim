@@ -14,4 +14,5 @@ namespace TEST
 	void testCurveT();
 	void testCurveK();
 	void testCurveA();
+	void testWENO(double(*fn)(double), double(*df)(double), bool(*cn)(double));
 }

@@ -14,6 +14,100 @@ namespace TEST
 		exit(0);
 	}
 
+	void testWENO(double(*fn)(double), double(*df)(double), bool(*cn)(double))
+	{
+		const size_t len = 200;
+		double x0 = -1.0, xn = 1.0;
+		double h = (xn - x0) / len, k = 0.5 * h;
+
+		double u[len + D + E];
+		double du[len];
+
+
+		for (size_t i = 0; i < len; i++)
+		{
+			if (cn(i * h + x0))
+			{
+				//u[i + D] = -(i * h + x0);
+				u[i + D] = -sin(PI * (i * h + x0));
+				//u[i + D] = 1;
+			}
+			else
+			{
+				u[i + D] = 0;
+			}
+
+		}
+
+		FILE *file;
+		file = fopen("output.txt", "w");
+		for (size_t i = 0; i < len; i++)
+		{
+			fprintf(file, "%f %f\n", i * h + x0, u[i + D]);
+		}
+
+		for (double time = 0; time < 0.55; time += k)
+		{
+
+			static auto boundary = [&]() {
+				double a = 0;
+				size_t index = 0;
+				for (size_t i = D; i < len + D; i++)
+				{
+					double b = abs(df(u[i]));
+					if (a < b)
+					{
+						a = b;
+						index = i;
+					}
+				}
+				//a = abs(df(u[index]));
+
+				for (size_t i = 0; i < D; i++)
+				{
+					u[i] = u[i + len];
+				}
+				for (size_t i = len + D; i < D + len + E; i++)
+				{
+					u[i] = u[i - len];
+				}
+
+				return a;
+			};
+
+			double dk[4][len];
+			static auto update = [&](size_t index, double dt) {
+				double a = boundary();
+				for (size_t i = 0; i < len; i++)
+				{
+					double fs[] = { fn(u[i]), fn(u[i + 1]), fn(u[i + 2]), fn(u[i + 3]), fn(u[i + 4]), fn(u[i + 5]), fn(u[i + 6]) };
+					double ds[] = { df(u[i]), df(u[i + 1]), df(u[i + 2]), df(u[i + 3]), df(u[i + 4]), df(u[i + 5]), df(u[i + 6]) };
+					double s[] = { u[i], u[i + 1], u[i + 2], u[i + 3], u[i + 4], u[i + 5], u[i + 6] };
+
+					dk[index][i] = -WENO::grad(fs, &a, s) * H / h;
+				}
+				for (size_t i = 0; i < len; i++) u[i + D] = du[i] + dt * dk[index][i];
+			};
+
+			for (size_t i = 0; i < len; i++) du[i] = u[i + D];
+			update(0, k / 2.0);
+			update(1, k / 2.0);
+			update(2, k);
+			update(3, 0);
+			for (size_t i = 0; i < len; i++) u[i + D] = du[i] + k / 6.0 * (dk[0][i] + 2.0 * dk[1][i] + 2.0 * dk[2][i] + dk[3][i]);
+
+		}
+
+		fprintf(file, "\n\n");
+		for (size_t i = 0; i < len; i++)
+		{
+			fprintf(file, "%f %f\n", i * h + x0, u[i + D]);
+		}
+		fclose(file);
+
+		exit(0);
+	}
+
 	void testCurveMu()
 	{
 		FILE *f;
@@ -34,7 +128,7 @@ namespace TEST
 			fprintf(f, "# %f\n", rho / RHO_CURVE);
 			for (double loge = e0; loge < en; loge += de)
 			{
-				fprintf(f, "%f %f\n", loge, FIT::mu(pow(10, loge), rho/ RHO_CURVE));
+				fprintf(f, "%f %f\n", loge, FIT::mu(pow(10, loge), rho / RHO_CURVE));
 			}
 			fprintf(f, "\n\n");
 		}
@@ -152,7 +246,7 @@ namespace TEST
 			RHO_CURVE * 1e-5, RHO_CURVE * 1e-4,
 			RHO_CURVE * 1e-3, RHO_CURVE * 1e-2,
 			RHO_CURVE * 1e-1, RHO_CURVE * 1e0,
-			RHO_CURVE * 1e1})
+			RHO_CURVE * 1e1 })
 		{
 
 			fprintf(f, "# %f\n", rho / RHO_CURVE);

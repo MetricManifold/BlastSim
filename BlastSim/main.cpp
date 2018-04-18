@@ -18,7 +18,16 @@ int main(int argc, char *argv[])
 	else if (strcmp(argv[2], "TURBULENT") == 0) type = TURBULENT;
 	else exit(1);
 
-	//TEST::test();
+	auto fn = [](double u) {return u * u / 2; };
+	auto df = [](double u) {return u; };
+	auto cn = [](double w) {return true; };
+	TEST::testWENO(fn, df, cn);
+
+	//auto fn = [](double u) {return u; };
+	//auto df = [](double u) {return 1.0; };
+	//auto cn = [](double w) {return w > -0.5 && w < 0.5; };
+	//TEST::testWENO(fn, df, cn);
+
 
 	FILE *f;
 	f = fopen("output.txt", "w");

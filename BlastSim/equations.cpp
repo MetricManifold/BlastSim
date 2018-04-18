@@ -27,7 +27,8 @@ double EQN::fnrho(size_t i, size_t j)
 	double vs[] = SLICEY(v);
 	STENCIL_MUL(rhov, vs);
 
-	return -((WENO::grad(rhou, us, rhox) + 0 * WENO::grad(rhov, vs, rhoy)) + A / y * rhov[D]);
+	return 0;
+	//return -((WENO::grad(rhou, us, rhox) + 0 * WENO::grad(rhov, vs, rhoy)) + A / y * rhov[D]);
 }
 
 double EQN::fnrhou(size_t i, size_t j)
@@ -53,8 +54,9 @@ double EQN::fnrhou(size_t i, size_t j)
 		STENCIL_MUL(rhoy, us);
 	}
 
-	return -((WENO::grad(rhoup, us, rhox) + 0*WENO::grad(rhovu, vs, rhoy)) + 
-		A / y * rhovu[D]) + VISCOUS::fnrhou(i, j) / Re;
+	return 0;
+	//return -((WENO::grad(rhoup, us, rhox) + 0*WENO::grad(rhovu, vs, rhoy)) + 
+	//	A / y * rhovu[D]) + VISCOUS::fnrhou(i, j) / Re;
 }
 
 double EQN::fnrhov(size_t i, size_t j)
@@ -80,8 +82,9 @@ double EQN::fnrhov(size_t i, size_t j)
 		STENCIL_MUL(rhoy, vs);
 	}
 
-	return -((WENO::grad(rhouv, us, rhox) + 0*WENO::grad(rhovp, vs, rhoy)) + 
-		A / y * (rhovp[D] - p[i + D][j + D])) + VISCOUS::fnrhov(i, j) / Re;
+	return 0;
+	//return -((WENO::grad(rhouv, us, rhox) + 0*WENO::grad(rhovp, vs, rhoy)) + 
+	//	A / y * (rhovp[D] - p[i + D][j + D])) + VISCOUS::fnrhov(i, j) / Re;
 }
 
 double EQN::fnrhoe(size_t i, size_t j)
@@ -110,6 +113,7 @@ double EQN::fnrhoe(size_t i, size_t j)
 		STENCIL_MUL(rhoy, es);
 	}
 
-	return -((WENO::grad(rhopu, us, rhox) + 0*WENO::grad(rhopv, vs, rhoy)) + 
-		A / y * rhopv[D]) + VISCOUS::fnrhoe(i, j) / Re;
+	return 0;
+	//return -((WENO::grad(rhopu, us, rhox) + 0*WENO::grad(rhopv, vs, rhoy)) + 
+	//	A / y * rhopv[D]) + VISCOUS::fnrhoe(i, j) / Re;
 }
