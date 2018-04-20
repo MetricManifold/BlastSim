@@ -3,11 +3,11 @@
 #include "weno.h"
 #include "viscous.h"
 
-#define STENCIL_MUL(f, g) for (size_t n = 0; n < 6; n++) f[n] *= g[n];
-#define STENCIL_ADD(f, g) for (size_t n = 0; n < 6; n++) f[n] += g[n];
+#define STENCIL_MUL(f, g) for (size_t n = 0; n < D + E + 1; n++) f[n] *= g[n];
+#define STENCIL_ADD(f, g) for (size_t n = 0; n < D + E + 1; n++) f[n] += g[n];
 
-#define SLICEX(f) { f[i][j + D], f[i + 1][j + D], f[i + 2][j + D], f[i + 3][j + D], f[i + 4][j + D], f[i + 5][j + D] }
-#define SLICEY(f) { f[i + D][j], f[i + D][j + 1], f[i + D][j + 2], f[i + D][j + 3], f[i + D][j + 4], f[i + D][j + 5] }
+#define SLICEX(f) { f[i][j + D], f[i + 1][j + D], f[i + 2][j + D], f[i + 3][j + D], f[i + 4][j + D], f[i + 5][j + D], f[i + 6][j + D] }
+#define SLICEY(f) { f[i + D][j], f[i + D][j + 1], f[i + D][j + 2], f[i + D][j + 3], f[i + D][j + 4], f[i + D][j + 5], f[i + D][j + 6] }
 
 namespace EQN
 {
@@ -29,5 +29,7 @@ namespace EQN
 	double fnrhou(size_t i, size_t j);
 	double fnrhov(size_t i, size_t j);
 	double fnrhoe(size_t i, size_t j);
+
+	double *system(size_t i, size_t j);
 }
 

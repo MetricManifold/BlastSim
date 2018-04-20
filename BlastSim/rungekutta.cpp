@@ -27,17 +27,17 @@ namespace RK
 		UPDATE(1, K / 2);
 		FITS;
 		boundaries();
-
+		
 		COMPUTE(2);
 		UPDATE(2, K);
 		FITS;
 		boundaries();
-
+		
 		COMPUTE(3);
 		LOOP rho[i + D][j + D] = drho[i][j] + K * (k[0][i][j].rho + 2 * k[1][i][j].rho + 2 * k[2][i][j].rho + k[3][i][j].rho) / 6;
-		LOOP u[i + D][j + D] = (du[i][j] * drho[i][j] + K * (k[0][i][j].rhou + 2 * k[1][i][j].rhou + 2 * k[2][i][j].rhou + k[3][i][j].rhou) / 6) / rho[i + D][j + D];
-		LOOP v[i + D][j + D] = (dv[i][j] * drho[i][j] + K * (k[0][i][j].rhov + 2 * k[1][i][j].rhov + 2 * k[2][i][j].rhov + k[3][i][j].rhov) / 6) / rho[i + D][j + D];
-		LOOP e[i + D][j + D] = (de[i][j] * drho[i][j] + K * (k[0][i][j].rhoe + 2 * k[1][i][j].rhoe + 2 * k[2][i][j].rhoe + k[3][i][j].rhoe) / 6) / rho[i + D][j + D];
+		LOOP u[i + D][j + D] = (du[i][j] + K * (k[0][i][j].u + 2 * k[1][i][j].u + 2 * k[2][i][j].u + k[3][i][j].u) / 6);
+		LOOP v[i + D][j + D] = (dv[i][j] + K * (k[0][i][j].v + 2 * k[1][i][j].v + 2 * k[2][i][j].v + k[3][i][j].v) / 6);
+		LOOP e[i + D][j + D] = (de[i][j] + K * (k[0][i][j].e + 2 * k[1][i][j].e + 2 * k[2][i][j].e + k[3][i][j].e) / 6);
 		FITS;
 		boundaries();
 

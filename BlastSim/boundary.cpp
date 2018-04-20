@@ -19,27 +19,27 @@ namespace BND
 	{
 		LOOPRIGHT u[i][j] = 0;
 		LOOPRIGHT v[i][j] = 0;
-		LOOPRIGHT p[i][j] = -(v[i][j] - 2 * v[i - 1][j] + v[i - 2][j]) / (H * Re) + p[i - 1][j];
-		LOOPRIGHT rho[i][j] = RHOW;
-		//LOOPRIGHT e[i][j] = 1;
+		LOOPRIGHT p[i][j] = -(v[i][j] - 2 * v[i - 1][j] + v[i - 2][j]) / (H * Re) + p[i - 1][j];//p[D + M - 1][j];
+		LOOPRIGHT rho[i][j] = rho[D + M - 1][j];
+		LOOPRIGHT e[i][j] = e[D + M - 1][j];
 	}
 
 	void noslipYN()
 	{
 		LOOPTOP u[i][j] = 0;
 		LOOPTOP v[i][j] = 0;
-		LOOPTOP p[i][j] = -(u[i][j] - 2 * u[i][j - 1] + u[i][j - 2]) / (H * Re) + p[i][j - 1];
-		LOOPTOP rho[i][j] = RHOW;
-		//LOOPTOP e[i][j] = 1;
+		LOOPTOP p[i][j] = -(u[i][j] - 2 * u[i][j - 1] + u[i][j - 2]) / (H * Re) + p[i][j - 1];//p[i][D + N - 1];
+		LOOPTOP rho[i][j] = rho[i][D + N - 1];
+		LOOPTOP e[i][j] = e[i][D + N - 1];
 	}
 
 	void noslipX0()
 	{
 		LOOPLEFT v[i][j] = 0;
 		LOOPLEFT u[i][j] = 0;
-		LOOPLEFT p[i][j] = -(v[i + 2][j] - 2 * v[i + 1][j] + v[i][j]) / (H * Re) + p[i + 1][j];
-		LOOPLEFT rho[i][j] = RHOW;
-		//LOOPLEFT e[i][j] = 1;
+		LOOPLEFT p[i][j] = -(v[i + 2][j] - 2 * v[i + 1][j] + v[i][j]) / (H * Re) + p[i + 1][j];//p[D][j];
+		LOOPLEFT rho[i][j] = rho[D][j];
+		LOOPLEFT e[i][j] = e[D][j];
 	}
 
 	void tangencyX0()
@@ -47,8 +47,8 @@ namespace BND
 		LOOPLEFT u[i][j] = u[D][j];
 		LOOPLEFT v[i][j] = 0;
 		LOOPLEFT p[i][j] = -(v[i + 2][j] - 2 * v[i + 1][j] + v[i][j]) / (H * Re) + p[i + 1][j];
-		LOOPLEFT rho[i][j] = RHOW;
-		//LOOPLEFT e[i][j] = e[D][j];
+		LOOPLEFT rho[i][j] = rho[D][j];
+		LOOPLEFT e[i][j] = e[D][j];
 	}
 
 	void farfieldXM()

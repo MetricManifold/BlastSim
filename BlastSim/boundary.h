@@ -3,7 +3,7 @@
 #include "constants.h"
 #include "equations.h"
 
-#define RHOW 0
+#define RHOW 100
 
 namespace BND
 {

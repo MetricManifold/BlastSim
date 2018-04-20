@@ -46,22 +46,19 @@ namespace TEST
 			fprintf(file, "%f %f\n", i * h + x0, u[i + D]);
 		}
 
-		for (double time = 0; time < 0.55; time += k)
+		for (double time = 0; time < 1.5; time += k)
 		{
 
 			static auto boundary = [&]() {
 				double a = 0;
-				size_t index = 0;
 				for (size_t i = D; i < len + D; i++)
 				{
 					double b = abs(df(u[i]));
 					if (a < b)
 					{
 						a = b;
-						index = i;
 					}
 				}
-				//a = abs(df(u[index]));
 
 				for (size_t i = 0; i < D; i++)
 				{
@@ -84,7 +81,7 @@ namespace TEST
 					double ds[] = { df(u[i]), df(u[i + 1]), df(u[i + 2]), df(u[i + 3]), df(u[i + 4]), df(u[i + 5]), df(u[i + 6]) };
 					double s[] = { u[i], u[i + 1], u[i + 2], u[i + 3], u[i + 4], u[i + 5], u[i + 6] };
 
-					dk[index][i] = -WENO::grad(fs, &a, s) * H / h;
+					//dk[index][i] = -WENO::grad(fs, s, a) * H / h;
 				}
 				for (size_t i = 0; i < len; i++) u[i + D] = du[i] + dt * dk[index][i];
 			};

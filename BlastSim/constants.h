@@ -26,7 +26,7 @@
 /*
  * gas constants
  */
-#define Re 50			// Reynold's number
+#define Re 1			// Reynold's number
 #define Rgas 287.06		// ideal gas constant
 
 /*

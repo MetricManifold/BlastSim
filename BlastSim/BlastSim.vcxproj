@@ -25,6 +25,8 @@
     <ClInclude Include="curve.h" />
     <ClInclude Include="equations.h" />
     <ClInclude Include="cases.h" />
+    <ClInclude Include="helper.h" />
+    <ClInclude Include="roe.h" />
     <ClInclude Include="rungekutta.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="viscous.h" />
@@ -36,7 +38,9 @@
     <ClCompile Include="curve.cpp" />
     <ClCompile Include="equations.cpp" />
     <ClCompile Include="cases.cpp" />
+    <ClCompile Include="helper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="roe.cpp" />
     <ClCompile Include="rungekutta.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="viscous.cpp" />

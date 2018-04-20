@@ -34,4 +34,7 @@ namespace FIT
 
 	// coefficient of thermal conductivity
 	double k(double e, double rho);
+
+	// specific heat
+	double gamma(double e, double rho);
 }
