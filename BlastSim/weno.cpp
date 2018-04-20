@@ -67,150 +67,162 @@ double WENO::flux(double *f, double *b)
 	return flux;
 }
 
-//double *WENO::gradV(double Ft[4][7], double Ut[4][7], double **L[2], double **R[2], double a)
-//{
-//	double G[7][4], V[7][4], F[7][4], U[7][4];
-//	for (size_t i = 0; i < 4; i++)
-//	{
-//		for (size_t j = 0; j < 7; j++)
-//		{
-//			F[j][i] = Ft[i][j];
-//			U[j][i] = Ut[i][j];
-//		}
-//	}
-//	for (size_t i = 0; i < 4; i++)
-//	{
-//		for (size_t j = 0; j < 7; j++)
-//		{
-//			G[j][i] = F[6 - j][i];
-//			V[j][i] = U[6 - j][i];
-//		}
-//	}
-//
-//	double left[4][4], right[4][4];
-//	for (size_t s = 0; s < 4; s++)
-//	{
-//		double *l = L[0][s];
-//		double *ll = L[1][s];
-//		double f[5], ff[5], g[5], gg[5], u[5], uu[5], v[5], vv[5];
-//		for (size_t i = 0; i < 5; i++)
-//		{
-//			f[i] = HELP::dot(ll, F[i + 1]);
-//			ff[i] = HELP::dot(l, F[i]);
-//
-//			g[i] = HELP::dot(l, G[i + 1]);
-//			gg[i] = HELP::dot(ll, G[i]);
-//
-//			u[i] = HELP::dot(ll, U[i + 1]);
-//			uu[i] = HELP::dot(l, U[i]);
-//
-//			v[i] = HELP::dot(l, V[i + 1]);
-//			vv[i] = HELP::dot(ll, V[i]);
-//		}
-//
-//		left[s][0] = WENO::flux(ff);
-//		left[s][1] = WENO::flux(g);
-//		left[s][2] = WENO::flux(v);
-//		left[s][3] = WENO::flux(uu);
-//
-//		right[s][0] = WENO::flux(f);
-//		right[s][1] = WENO::flux(gg);
-//		right[s][2] = WENO::flux(vv);
-//		right[s][3] = WENO::flux(u);
-//	}
-//
-//	double LEFT[4]{ 0 }, RIGHT[4]{ 0 };
-//	for (size_t i = 0; i < 4; i++)
-//	{
-//		double l[4]{ 0 }, r[4]{ 0 };
-//		for (size_t j = 0; j < 4; j++)
-//		{
-//			for (size_t s = 0; s < 4; s++)
-//			{
-//				l[j] += left[s][j] * R[0][s][i];
-//				r[j] += right[s][j] * R[1][s][i];
-//			}
-//		}
-//
-//		LEFT[i] = (l[0] + l[1] - a * (l[2] - l[3])) / 2.0;
-//		RIGHT[i] = (r[0] + r[1] - a * (r[2] - r[3])) / 2.0;
-//	}
-//
-//	double *result = new double[4];
-//	for (size_t i = 0; i < 4; i++)
-//	{
-//		result[i] = (RIGHT[i] - LEFT[i]) / H;
-//	}
-//	
-//	return result;
-//}
-
-
-double *WENO::gradV(double F[4][7], double U[4][7], double **L[2], double **R[2], double a)
+double *WENO::gradV(double Ft[4][7], double Ut[4][7], double **L[2], double **R[2], double a)
 {
-	double G[4][7], V[4][7];// , F[7][4], U[7][4];
+	double G[7][4], V[7][4], F[7][4], U[7][4];
 	for (size_t i = 0; i < 4; i++)
 	{
 		for (size_t j = 0; j < 7; j++)
 		{
-			G[i][j] = F[i][6 - j];
-			V[i][j] = U[i][6 - j];
+			F[j][i] = Ft[i][j];
+			U[j][i] = Ut[i][j];
 		}
+	}
+	for (size_t i = 0; i < 4; i++)
+	{
+		for (size_t j = 0; j < 7; j++)
+		{
+			G[j][i] = F[6 - j][i];
+			V[j][i] = U[6 - j][i];
+		}
+	}
+
+	double left[4],//[4], 
+		right[4];// [4];
+	for (size_t s = 0; s < 4; s++)
+	{
+		double *l = L[0][s];
+		double *ll = L[1][s];
+		double f[5], ff[5], g[5], gg[5], u[5], uu[5], v[5], vv[5];
+		for (size_t i = 0; i < 5; i++)
+		{
+			f[i] = HELP::dot(ll, F[i + 1]);
+			ff[i] = HELP::dot(l, F[i]);
+
+			g[i] = HELP::dot(l, G[i + 1]);
+			gg[i] = HELP::dot(ll, G[i]);
+
+			u[i] = HELP::dot(ll, U[i + 1]);
+			uu[i] = HELP::dot(l, U[i]);
+
+			v[i] = HELP::dot(l, V[i + 1]);
+			vv[i] = HELP::dot(ll, V[i]);
+		}
+
+		//left[s][0] = WENO::flux(ff);
+		//left[s][1] = WENO::flux(g);
+		//left[s][2] = WENO::flux(v);
+		//left[s][3] = WENO::flux(uu);
+		//
+		//right[s][0] = WENO::flux(f);
+		//right[s][1] = WENO::flux(gg);
+		//right[s][2] = WENO::flux(vv);
+		//right[s][3] = WENO::flux(u);
+
+		right[s] = (WENO::flux(f) + WENO::flux(gg) - a * (WENO::flux(vv) - WENO::flux(u))) / 2.0;
+		left[s] = (WENO::flux(ff) + WENO::flux(g) - a * (WENO::flux(v) - WENO::flux(uu))) / 2.0;
+	}
+
+	double LEFT[4]{ 0 }, RIGHT[4]{ 0 };
+	for (size_t i = 0; i < 4; i++)
+	{
+		//double l[4]{ 0 }, r[4]{ 0 };
+		double l = 0, r = 0;
+		for (size_t j = 0; j < 1; j++)
+		{
+			for (size_t s = 0; s < 4; s++)
+			{
+				l += left[s] * R[0][s][i];
+				r += right[s] * R[1][s][i];
+			}
+		}
+
+		//LEFT[i] = (l[0] + l[1] - a * (l[2] - l[3])) / 2.0;
+		//RIGHT[i] = (r[0] + r[1] - a * (r[2] - r[3])) / 2.0;
+
+		LEFT[i] = l;
+		RIGHT[i] = r;
 	}
 
 	double *result = new double[4];
-	for (size_t c = 0; c < 4; c++)
+	for (size_t i = 0; i < 4; i++)
 	{
-		double left[4][4][4], right[4][4][4];
-		for (size_t s = 0; s < 4; s++)
-		{
-			double *l = L[0][s], *ll = L[1][s];
-			double f[5], ff[5], g[5], gg[5], u[5], uu[5], v[5], vv[5];
-			
-			for (size_t n = 0; n < 4; n++)
-			{
-				HELP::dot(ll[n], F[c] + 1, f, 5);
-				HELP::dot(l[n], F[c], ff, 5);
-
-				HELP::dot(l[n], G[c] + 1, g, 5);
-				HELP::dot(ll[n], G[c], gg, 5);
-
-				HELP::dot(ll[n], U[c] + 1, u, 5);
-				HELP::dot(l[n], U[c], uu, 5);
-
-				HELP::dot(l[n], V[c] + 1, v, 5);
-				HELP::dot(ll[n], V[c], vv, 5);
-
-				left[0][s][n] = WENO::flux(ff);
-				left[1][s][n] = WENO::flux(g);
-				left[2][s][n] = WENO::flux(v);
-				left[3][s][n] = WENO::flux(uu);
-
-				right[0][s][n] = WENO::flux(f);
-				right[1][s][n] = WENO::flux(gg);
-				right[2][s][n] = WENO::flux(vv);
-				right[3][s][n] = WENO::flux(u);
-			}
-		}
-
-
-		double LEFT = 0, RIGHT = 0;
-		for (size_t s = 0; s < 4; s++)
-		{
-			double l[4]{ 0 }, r[4]{ 0 };
-			for (size_t i = 0; i < 4; i++)
-			{
-				l[i] += HELP::dot(left[i][s], R[0][s]);
-				r[i] += HELP::dot(right[i][s], R[1][s]);
-			}
-
-			LEFT = (l[0] + l[1] - a * (l[2] - l[3])) / 2.0;
-			RIGHT = (r[0] + r[1] - a * (r[2] - r[3])) / 2.0;
-		}
-
-		result[c] = (RIGHT - LEFT) / H;
+		result[i] = (RIGHT[i] - LEFT[i]) / H;
 	}
-
+	
 	return result;
 }
+
+
+//double *WENO::gradV(double F[4][7], double U[4][7], double **L[2], double **R[2], double a)
+//{
+//	double G[4][7], V[4][7];// , F[7][4], U[7][4];
+//	for (size_t i = 0; i < 4; i++)
+//	{
+//		for (size_t j = 0; j < 7; j++)
+//		{
+//			G[i][j] = F[i][6 - j];
+//			V[i][j] = U[i][6 - j];
+//		}
+//	}
+//
+//	double *result = new double[4];
+//	for (size_t c = 0; c < 4; c++)
+//	{
+//		double left[4][4],//[4], 
+//			right[4][4];// [4];
+//		for (size_t s = 0; s < 4; s++)
+//		{
+//			double *l = L[0][s], *ll = L[1][s];
+//			double f[5], ff[5], g[5], gg[5], u[5], uu[5], v[5], vv[5];
+//			
+//			for (size_t n = 0; n < 4; n++)
+//			{
+//				HELP::dot(ll[n], F[c] + 1, f, 5);
+//				HELP::dot(l[n], F[c], ff, 5);
+//
+//				HELP::dot(l[n], G[c] + 1, g, 5);
+//				HELP::dot(ll[n], G[c], gg, 5);
+//
+//				HELP::dot(ll[n], U[c] + 1, u, 5);
+//				HELP::dot(l[n], U[c], uu, 5);
+//
+//				HELP::dot(l[n], V[c] + 1, v, 5);
+//				HELP::dot(ll[n], V[c], vv, 5);
+//
+//				//left[0][s][n] = WENO::flux(ff);
+//				//left[1][s][n] = WENO::flux(g);
+//				//left[2][s][n] = WENO::flux(v);
+//				//left[3][s][n] = WENO::flux(uu);
+//				
+//				//right[0][s][n] = WENO::flux(f);
+//				//right[1][s][n] = WENO::flux(gg);
+//				//right[2][s][n] = WENO::flux(vv);
+//				//right[3][s][n] = WENO::flux(u);
+//
+//				right[s][n] = (WENO::flux(f) + WENO::flux(gg) - a * (WENO::flux(vv) - WENO::flux(u))) / 2.0;
+//				left[s][n] = (WENO::flux(ff) + WENO::flux(g) - a * (WENO::flux(v) - WENO::flux(uu))) / 2.0;
+//			}
+//		}
+//
+//
+//		double LEFT = 0, RIGHT = 0;
+//		for (size_t s = 0; s < 4; s++)
+//		{
+//			double l, r;
+//			for (size_t i = 0; i < 4; i++)
+//			{
+//				l = HELP::dot(left[s], R[0][s]);
+//				r = HELP::dot(right[s], R[1][s]);
+//			}
+//
+//			LEFT = l;// (l[0] + l[1] - a * (l[2] - l[3])) / 2.0;
+//			RIGHT = r;// (r[0] + r[1] - a * (r[2] - r[3])) / 2.0;
+//		}
+//
+//		result[c] = (RIGHT - LEFT) / H;
+//	}
+//
+//	return result;
+//}
 
